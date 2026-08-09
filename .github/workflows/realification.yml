@@ -1,0 +1,39 @@
+name: realification-study
+
+on:
+  push:
+    branches:
+      - "agent/realification-scaling"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+      - name: Realification unit tests
+        run: python -m unittest -v test_realification_scaling.py
+      - name: Scaling precision and 3M benchmarks
+        run: python realification_scaling_benchmark.py --output-dir results/realification
+      - name: End-to-end VQC benchmarks
+        run: python realification_vqc_benchmark.py --output-dir results/realification
+      - name: Upload realification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qreal-realification-results
+          path: results/realification/
+          if-no-files-found: error
