@@ -1,0 +1,9 @@
+{
+  "python": "3.11.15 (main, Jun 16 2026, 21:41:52) [GCC 13.3.0]",
+  "numpy": "2.4.6",
+  "platform": "Linux-6.17.0-1020-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "github_actions_run": 31337512300,
+  "artifact_id": 9044783807,
+  "artifact_sha256": "be5f8534d9402c743f1caddbb4783a37f3e00042b7a6211c1128900a06fc46f6"
+}
