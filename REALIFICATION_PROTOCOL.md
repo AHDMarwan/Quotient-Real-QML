@@ -16,3 +16,5 @@ The complex and realified simulators use the same RY/RZ/CNOT circuit topology an
 ## Claim policy
 
 Exact realification should preserve states, probabilities, gradients, and matched optimization paths within numerical precision. Storage is compared using actual array bytes. Runtime claims use medians from the same GitHub Actions runner. Raw CSV/JSON outputs are retained as workflow artifacts and committed to the repository after validation.
+
+The CI study is intentionally CPU/NumPy-specific; hardware-general claims require separate accelerator measurements.
