@@ -8,6 +8,7 @@ on:
     branches:
       - "main"
       - "agent/genuine-quotient-real-vqc"
+      - "agent/quotient-gauge-pruning"
   workflow_dispatch:
 
 permissions:
