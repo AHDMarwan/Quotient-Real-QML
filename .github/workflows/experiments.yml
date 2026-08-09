@@ -3,9 +3,11 @@ name: qreal-experiments
 on:
   push:
     branches:
-      - "agent/genuine-quotient-real-vqc"
+      - "agent/**"
   pull_request:
-    branches: ["main"]
+    branches:
+      - "main"
+      - "agent/genuine-quotient-real-vqc"
   workflow_dispatch:
 
 permissions:
@@ -24,13 +26,17 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
       - name: Unit tests
-        run: python -m unittest -v test_equivalence.py test_quotient.py
+        run: python -m unittest -v test_equivalence.py test_quotient.py test_gauge.py test_automatic_pruning.py
       - name: Demo
         run: python demo.py
       - name: Baseline benchmarks
         run: python benchmark.py --output-dir results/baseline
       - name: Quotient-real benchmarks
         run: python quotient_benchmark.py --output-dir results/quotient
+      - name: Gauge-pruning benchmarks
+        run: python gauge_benchmark.py --output-dir results/gauge
+      - name: Automatic QFIM-pruning benchmarks
+        run: python automatic_pruning_benchmark.py --output-dir results/automatic
       - name: Upload benchmark results
         if: always()
         uses: actions/upload-artifact@v4
