@@ -24,8 +24,8 @@ from realification_simulator import (
 
 
 def _median_time(fn, repeats: int):
+    result = fn()  # warm-up to reduce first-call/cache bias
     values = []
-    result = None
     for _ in range(repeats):
         t0 = time.perf_counter()
         result = fn()
@@ -79,7 +79,7 @@ def run_worker_subprocess(backend: str, n: int, precision: str, layers: int, rep
 def scaling_suite():
     rows = []
     for i, n in enumerate((4, 8, 12, 16, 18, 20)):
-        repeats = 5 if n <= 12 else 3 if n <= 16 else 2 if n <= 18 else 1
+        repeats = 15 if n <= 12 else 7 if n <= 16 else 5
         complex_row = run_worker_subprocess("complex", n, "64", 1, repeats, 100 + i)
         real_row = run_worker_subprocess("realified", n, "64", 1, repeats, 100 + i)
         rows.append({
@@ -135,7 +135,7 @@ def three_m_suite():
         real = (psi.real.copy(), psi.imag.copy())
         gate = random_unitary(600 + i)
         q = n // 2
-        repeats = 20 if n <= 8 else 10 if n <= 12 else 5 if n <= 16 else 3
+        repeats = 40 if n <= 8 else 25 if n <= 12 else 15 if n <= 16 else 10
         tc, target = _median_time(lambda: apply_complex(psi, gate, q, n), repeats)
         t4, out4 = _median_time(lambda: apply_realified_4m(real, gate, q, n), repeats)
         t3, out3 = _median_time(lambda: apply_realified_3m(real, gate, q, n), repeats)
