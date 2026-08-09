@@ -9,6 +9,7 @@ on:
       - "main"
       - "agent/genuine-quotient-real-vqc"
       - "agent/quotient-gauge-pruning"
+      - "agent/automatic-qfim-pruning"
   workflow_dispatch:
 
 permissions:
@@ -44,4 +45,37 @@ jobs:
         with:
           name: qreal-benchmark-results
           path: results/
+          if-no-files-found: warn
+
+  statistical-study:
+    if: github.event_name == 'pull_request' && github.base_ref == 'agent/automatic-qfim-pruning'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements.txt
+      - name: Statistical unit tests
+        run: python -m unittest -v test_statistical_study.py
+      - name: Large-scale paired statistical study
+        run: >-
+          python statistical_study.py
+          --output-dir results/statistical
+          --gradient-seeds 500
+          --convergence-seeds 200
+          --gradient-replicates 100
+          --epochs 30
+          --bootstrap-samples 4000
+          --gradient-budgets 6000,12000,24000,48000
+          --convergence-budgets 750,1500,3000,6000
+      - name: Upload statistical results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qreal-statistical-study-results
+          path: results/statistical/
           if-no-files-found: warn
