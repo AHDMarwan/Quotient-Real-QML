@@ -12,8 +12,8 @@ from realification_simulator import parameter_shift_jacobian, probabilities
 
 
 def _median_time(fn, repeats: int = 3):
+    result = fn()  # warm-up
     values = []
-    result = None
     for _ in range(repeats):
         t0 = time.perf_counter()
         result = fn()
@@ -42,10 +42,10 @@ def benchmark_configuration(n: int, seed: int):
     xs = rng.normal(size=(samples, n))
     theta = rng.normal(scale=0.2, size=2 * n)
 
-    tc, pc = _median_time(lambda: probabilities("complex", xs, theta, n), 3)
-    tr, pr = _median_time(lambda: probabilities("realified", xs, theta, n), 3)
-    jtc, jc = _median_time(lambda: parameter_shift_jacobian("complex", xs, theta, n), 2)
-    jtr, jr = _median_time(lambda: parameter_shift_jacobian("realified", xs, theta, n), 2)
+    tc, pc = _median_time(lambda: probabilities("complex", xs, theta, n), 7)
+    tr, pr = _median_time(lambda: probabilities("realified", xs, theta, n), 7)
+    jtc, jc = _median_time(lambda: parameter_shift_jacobian("complex", xs, theta, n), 3)
+    jtr, jr = _median_time(lambda: parameter_shift_jacobian("realified", xs, theta, n), 3)
 
     row = {
         "n_qubits": n,
