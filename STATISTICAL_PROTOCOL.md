@@ -29,3 +29,5 @@ For each budget the analysis reports:
 - Wilson 95% interval for the fraction of paired trials where the augmented parameterization is worse.
 
 A fixed-model advantage is flagged only when the paired mean-difference bootstrap interval is strictly above zero and at least one Holm-adjusted paired test is below 0.05. Gradient-noise and convergence conclusions are reported separately.
+
+All random-number streams are deterministically seeded, and GitHub Actions records the exact code revision and uploads both summary and seed-level trial tables for reproducibility.
